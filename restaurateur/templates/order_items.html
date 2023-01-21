@@ -1,0 +1,47 @@
+{% extends 'base_restaurateur_page.html' %}
+
+{% block title %}Необработанные заказы | Star Burger{% endblock %}
+
+{% block content %}
+  <center>
+    <h2>Необработанные заказы</h2>
+  </center>
+
+  <hr/>
+  <br/>
+  <br/>
+  <div class="container">
+   <table class="table table-responsive">
+    <tr>
+      <th>Телефон</th>
+      <th>Адрес доставки</th>
+      <th>Комментарий</th>
+      <th>Рестораны</th>
+      <th>Ссылка на редактирование</th>
+    </tr>
+
+    {% for order in orders %}
+      <tr>
+        <td>{{order.phonenumber}}</td>
+        <td>{{order.address}}</td>
+        <td>{{order.comment}}</td>
+        <td>
+          {% if order.restaurant %}
+            Готовит {{order.restaurant.name}}
+          {% else %}
+            <details>
+              <summary>Может быть приготовлен ресторанами:</summary>
+              <ul>
+                {% for restaurant in order.available_restaurants %}
+                  <li>{{restaurant.name}} {% if restaurant.distance %}- {{restaurant.distance}} км{% endif %}</li>
+                {% endfor %}
+              </ul>
+            </details>
+          {% endif %}
+        </td>
+        <td><a href="{% url 'admin:foodcartapp_order_change' object_id=order.id %}?next={{ request.path }}" >Редактировать</a></td>
+      </tr>
+    {% endfor %}
+   </table>
+  </div>
+{% endblock %}
